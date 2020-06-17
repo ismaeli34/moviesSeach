@@ -1,0 +1,6 @@
+amazonProperties:
+  endpointUrl: https://s3.us-east-2.amazonaws.com
+  accessKey: AKIAXOSZ4Z27WAQGWQMQ
+  secretKey: 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
+  bucketName: my-lucenebucket
+  
