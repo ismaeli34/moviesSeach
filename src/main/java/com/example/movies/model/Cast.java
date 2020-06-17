@@ -1,11 +1,10 @@
 package com.example.movies.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -18,7 +17,9 @@ public class Cast {
 	@JsonProperty("profile_path")
 	private String profilePath;
 	@JsonProperty("character")
+	@Column(length=512)
 	private String castCharacter;
+	
 	
 	public Cast() {
 		super();
@@ -62,5 +63,10 @@ public class Cast {
 		this.castCharacter = castCharacter;
 	}
 
+	@Override
+	public String toString()
+	{
+		return this.castCharacter;
+	}
 	
 }

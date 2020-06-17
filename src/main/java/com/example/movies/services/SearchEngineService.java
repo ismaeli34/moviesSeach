@@ -5,20 +5,19 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.*;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.search.*;
-import org.apache.lucene.search.spell.Dictionary;
-import org.apache.lucene.search.spell.LuceneDictionary;
-import org.apache.lucene.search.suggest.Lookup.LookupResult;
-import org.apache.lucene.search.suggest.analyzing.AnalyzingInfixSuggester;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.slf4j.Logger;
@@ -29,8 +28,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.movies.model.Cast;
 import com.example.movies.model.Movies;
-
-import javax.persistence.criteria.CriteriaBuilder;
 
 /**
  * @author ronneyismael
@@ -156,8 +153,8 @@ public class SearchEngineService {
 		Field titleField = new TextField("title", movie.getTitle(), Field.Store.YES);
 		doc.add(titleField);
 		doc.add(new TextField("id",String.valueOf(movie.getId()),Field.Store.YES));
-		Field directorField = new TextField("director", movie.getDirector(), Field.Store.YES);
-		doc.add(directorField);
+		//Field directorField = new TextField("director", movie.getDirector(), Field.Store.YES);
+		//doc.add(directorField);
 		
 		Field languageField = new TextField("language", movie.getLanguage(), Field.Store.YES);
 		doc.add(languageField);
@@ -165,16 +162,16 @@ public class SearchEngineService {
 		Field genreField = new TextField("genre", movie.getGenre(), Field.Store.YES);
 		doc.add(genreField);
 		
-		Field releaseDateField = new TextField("release_date", movie.getRelease_date(), Field.Store.YES);
+		Field releaseDateField = new TextField("release_date", movie.getRelease_date()==null?"":movie.getRelease_date(), Field.Store.YES);
 		doc.add(releaseDateField);
 		
 		Field ratingsField = new TextField("ratings", movie.getRatings(), Field.Store.YES);
 		doc.add(ratingsField);
 		
-		Field posterPathField = new TextField("poster_path", movie.getPoster_path(), Field.Store.YES);
+		Field posterPathField = new TextField("poster_path", movie.getPoster_path()==null?"":movie.getPoster_path(), Field.Store.YES);
 		doc.add(posterPathField);
 		
-		Field backDropPathField = new TextField("backdrop_path", movie.getBackdrop_path(), Field.Store.YES);
+		Field backDropPathField = new TextField("backdrop_path", movie.getBackdrop_path()==null?"":movie.getBackdrop_path(), Field.Store.YES);
 		doc.add(backDropPathField);
 		
 		Field overviewField = new TextField("overview", movie.getOverview(),Field.Store.YES);
@@ -216,6 +213,20 @@ public class SearchEngineService {
 	public List<Movies> search(String query){
 		
 		return null;
+	}
+
+	public void deleteAllFromIndex() {
+		
+		try {
+			indexWriter.deleteAll();
+			indexWriter.commit();
+			log.info("Is Deleted"+ indexWriter.hasDeletions()+" num docs"+indexWriter.numDocs());
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		}
+		
+		
+		
 	}
 
 
