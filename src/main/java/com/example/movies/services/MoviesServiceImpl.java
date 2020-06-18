@@ -95,7 +95,7 @@ public class MoviesServiceImpl implements MovieService {
 	@Override
 	public List<Movies> search(String query) throws IOException, ParseException {
 		// TODO Auto-generated method stub
-		return searchEngine.query(query);
+		return searchEngine.search(query);
 	}
 
 	public Page<Movies> findAllByPage(Pageable page) {
@@ -120,7 +120,7 @@ public class MoviesServiceImpl implements MovieService {
 	public void dumpMovies() {
 		log.info("Fetching Movies from movie DB API");
 		try {
-			moviesRepo.saveAll(getMoviesFromAPI());
+			//moviesRepo.saveAll(getMoviesFromAPI());
 		} catch (Exception e) {
 			log.error(e.getMessage());
 		}
